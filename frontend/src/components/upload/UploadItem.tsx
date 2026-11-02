@@ -35,19 +35,19 @@ function FileTypeIcon({ file, className }: { file: File; className: string }) {
 }
 
 const PHASE: Record<UploadPhase | "ready", { label: string; tone: Tone }> = {
-  ready: { label: "ready", tone: "neutral" },
-  idle: { label: "ready", tone: "neutral" },
-  initiating: { label: "requesting", tone: "info" },
-  uploading: { label: "uploading", tone: "info" },
-  paused: { label: "paused", tone: "warning" },
-  completing: { label: "finalizing", tone: "info" },
-  processing: { label: "processing", tone: "info" },
-  completed: { label: "done", tone: "success" },
-  failed: { label: "failed", tone: "danger" },
-  canceled: { label: "canceled", tone: "neutral" },
+  ready: { label: "Ready", tone: "neutral" },
+  idle: { label: "Ready", tone: "neutral" },
+  initiating: { label: "Requesting", tone: "info" },
+  uploading: { label: "Uploading", tone: "info" },
+  paused: { label: "Paused", tone: "warning" },
+  completing: { label: "Finalizing", tone: "info" },
+  processing: { label: "Processing", tone: "info" },
+  completed: { label: "Done", tone: "success" },
+  failed: { label: "Failed", tone: "danger" },
+  canceled: { label: "Canceled", tone: "neutral" },
 };
 
-const STRATEGY_LABEL = { post: "presigned POST", put: "presigned PUT", multipart: "multipart" } as const;
+const STRATEGY_LABEL = { post: "Presigned POST", put: "Presigned PUT", multipart: "Multipart" } as const;
 
 export function UploadItem({
   file,
@@ -77,37 +77,42 @@ export function UploadItem({
   return (
     <li
       className={cx(
-        "rounded-lg border bg-elevated p-3 transition sm:p-4",
-        phase === "uploading" ? "border-accent/50 shadow-glow" : "border-line-muted hover:border-line",
+        "rounded-xl border bg-elevated p-4 transition",
+        phase === "uploading" ? "border-accent/40 shadow-[0_0_0_3px_var(--accent-soft)]" : "border-line",
       )}
     >
       <div className="flex items-start gap-3">
-        <span className="grid size-9 shrink-0 place-items-center rounded-md border border-line-muted bg-sunken">
-          <FileTypeIcon file={file} className="size-4.5 text-accent" />
+        <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-accent-soft">
+          <FileTypeIcon file={file} className="size-5 text-accent" />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-            <p className="truncate font-mono text-sm font-semibold text-fg" title={file.name}>
+            <p className="truncate text-sm font-semibold text-fg" title={file.name}>
               {file.name}
             </p>
             <Badge tone={meta.tone}>
-              {spinning && <LoaderCircle aria-hidden className="size-3 animate-spin motion-reduce:animate-none" />}
-              {phase === "completed" && <CircleCheck aria-hidden className="size-3" />}
-              {phase === "failed" && <CircleAlert aria-hidden className="size-3" />}
+              {spinning && <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />}
+              {phase === "completed" && <CircleCheck aria-hidden className="size-3.5" />}
+              {phase === "failed" && <CircleAlert aria-hidden className="size-3.5" />}
               <span aria-live="polite">{meta.label}</span>
             </Badge>
           </div>
-          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-            <Badge>{formatBytes(file.size)}</Badge>
-            <Badge>{file.type || "unknown type"}</Badge>
-            {state?.strategy && <Badge tone="info">{STRATEGY_LABEL[state.strategy]}</Badge>}
-            <span className="font-mono text-[11px] text-fg-3">modified {new Date(file.lastModified).toLocaleString()}</span>
-          </div>
+          <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs text-fg-3">
+            <span>{formatBytes(file.size)}</span>
+            <span aria-hidden>·</span>
+            <span>{file.type || "Unknown type"}</span>
+            {state?.strategy && (
+              <>
+                <span aria-hidden>·</span>
+                <span className="font-medium text-accent">{STRATEGY_LABEL[state.strategy]}</span>
+              </>
+            )}
+          </p>
 
           {issues.length > 0 && !session && (
-            <ul className="mt-2 space-y-0.5 font-mono text-[11px] text-warn">
+            <ul className="mt-2 space-y-1 text-xs font-medium text-warn">
               {issues.map((i) => (
-                <li key={i} className="flex items-center gap-1">
+                <li key={i} className="flex items-center gap-1.5">
                   <CircleAlert aria-hidden className="size-3.5" /> {i}
                 </li>
               ))}
@@ -122,33 +127,33 @@ export function UploadItem({
                 max={state.totalBytes || 1}
                 tone={phase === "failed" ? "danger" : phase === "paused" ? "warning" : phase === "completed" ? "success" : "info"}
               />
-              <dl className="flex flex-wrap gap-x-4 gap-y-0.5 font-mono text-[11px] text-fg-2 tabular-nums">
-                <Stat label="sent">
+              <dl className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-fg-2 tabular-nums">
+                <Stat label="Sent">
                   {formatBytes(state.uploadedBytes)} / {formatBytes(state.totalBytes)}{" "}
-                  <span className="text-accent-hover">{formatPercent(state.uploadedBytes, state.totalBytes)}</span>
+                  <span className="font-semibold text-fg">{formatPercent(state.uploadedBytes, state.totalBytes)}</span>
                 </Stat>
                 {(phase === "uploading" || phase === "paused") && (
                   <>
-                    <Stat label="speed">{formatSpeed(state.speedBps)}</Stat>
-                    <Stat label="eta">{formatDuration(state.etaSeconds)}</Stat>
+                    <Stat label="Speed">{formatSpeed(state.speedBps)}</Stat>
+                    <Stat label="ETA">{formatDuration(state.etaSeconds)}</Stat>
                   </>
                 )}
                 {state.partsTotal !== undefined && (
-                  <Stat label="parts">
+                  <Stat label="Parts">
                     {state.partsCompleted}/{state.partsTotal}
                   </Stat>
                 )}
-                {state.retries > 0 && <Stat label="retries">{state.retries}</Stat>}
-                {state.resumed && <Stat label="resumed">previous session</Stat>}
+                {state.retries > 0 && <Stat label="Retries">{state.retries}</Stat>}
+                {state.resumed && <Stat label="Resumed">from previous session</Stat>}
               </dl>
             </div>
           )}
 
           {state?.processing && (phase === "processing" || phase === "completed") && (
-            <div className="mt-3 rounded-md border border-line-muted bg-sunken p-2.5 font-mono text-[11px]">
+            <div className="mt-3 rounded-lg bg-base p-3 text-xs ring-1 ring-line">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-fg-2">
-                  <span className="text-fg-3">backend ›</span> <span className="text-violet">{state.processing.stage ?? "processing"}</span>
+                  <span className="text-fg-3">Backend:</span> <span className="font-medium text-violet">{state.processing.stage ?? "processing"}</span>
                 </span>
                 {state.processing.progress !== undefined && (
                   <span className="text-fg-3 tabular-nums">{Math.round(state.processing.progress * 100)}%</span>
@@ -161,43 +166,39 @@ export function UploadItem({
               )}
               {state.processing.message && <p className="mt-1.5 text-fg-3">{state.processing.message}</p>}
               {phase === "processing" && !state.processing.watching && (
-                <p className="mt-1.5 text-warn">stopped polling · refresh to check again</p>
+                <p className="mt-1.5 text-warn">Stopped checking. Use Refresh status to check again.</p>
               )}
             </div>
           )}
 
           {state?.error && phase === "failed" && (
-            <p role="alert" className="mt-2 rounded-md border border-err/30 bg-err/5 px-2.5 py-1.5 font-mono text-[11px] text-err">
-              <span className="text-err/70">error[{state.error.code}]</span> {state.error.message}
+            <p role="alert" className="mt-3 rounded-lg bg-err/8 px-3 py-2 text-xs text-err">
+              <span className="font-semibold">{state.error.message}</span> <span className="font-mono text-err/70">({state.error.code})</span>
             </p>
           )}
 
           {(state?.result || state?.uploadId) && (phase === "completed" || phase === "failed") && (
             <Disclosure as="div" className="mt-2.5">
-              <DisclosureButton className="group flex items-center gap-1 font-mono text-[11px] text-fg-3 transition-colors hover:text-accent-hover focus:outline-none data-focus:underline">
-                ./details
+              <DisclosureButton className="group flex items-center gap-1 rounded-md text-xs font-medium text-fg-2 transition-colors hover:text-fg focus:outline-none data-focus:outline-2 data-focus:outline-accent">
+                Details
                 <ChevronDown aria-hidden className="size-3 transition-transform group-data-open:rotate-180" />
               </DisclosureButton>
-              <DisclosurePanel className="mt-1.5 overflow-hidden rounded-md border border-line-muted bg-sunken font-mono text-[11px] leading-relaxed">
-                <p className="border-b border-line-muted px-2.5 py-1.5">
-                  <span className="text-term-user">tatar@upload</span>
-                  <span className="text-fg-3">:~$</span> <span className="text-fg">cat result.json</span>
-                </p>
-                <pre className="max-h-48 overflow-auto px-2.5 py-2 text-ok">
+              <DisclosurePanel className="mt-2 overflow-hidden rounded-lg bg-base ring-1 ring-line">
+                <pre className="max-h-48 overflow-auto p-3 font-mono text-[11px] leading-relaxed text-fg-2">
                   {JSON.stringify({ uploadId: state.uploadId, ...(state.result ? { result: state.result } : {}) }, null, 2)}
                 </pre>
               </DisclosurePanel>
             </Disclosure>
           )}
 
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-3 flex flex-wrap gap-2">
             {!session && (
               <Button size="sm" variant="primary" icon={Upload} disabled={!canStart || issues.length > 0} onClick={onStart}>
                 Upload
               </Button>
             )}
             {state && canPause(state) && (
-              <Button size="sm" icon={Pause} onClick={() => session!.pause()}>
+              <Button size="sm" variant="secondary" icon={Pause} onClick={() => session!.pause()}>
                 Pause
               </Button>
             )}
@@ -207,7 +208,7 @@ export function UploadItem({
               </Button>
             )}
             {state && canRetry(state) && (
-              <Button size="sm" variant="primary" icon={RotateCcw} onClick={() => onRetry(session!)}>
+              <Button size="sm" variant="secondary" icon={RotateCcw} onClick={() => onRetry(session!)}>
                 {phase === "processing" ? "Refresh status" : "Retry"}
               </Button>
             )}

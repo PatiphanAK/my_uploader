@@ -20,7 +20,7 @@ presigned URLs. No server of its own: it is a static site hosted on GitHub Pages
   - Storage requests carry no credentials.
   - Presigned URLs must be HTTPS and match an allowlist.
   - Backends you add yourself need confirmation before a key is sent to them.
-- **Interface:** dark/light theme in the style of the PatiphanAK portfolio; responsive down to phone width.
+- **Interface:** clean white theme with an indigo accent; responsive down to phone width.
 
 ## Repository layout
 

@@ -1,58 +1,25 @@
 @import "tailwindcss";
 
 /*
- * Tatar theme — matches the PatiphanAK portfolio (deep navy, blueprint grid,
- * blue/violet accents, monospace labels). Dark is the default; light is opt-in
- * via the header toggle (data-theme on <html>).
+ * Tatar Upload — modern white theme.
+ * Change the palette here; components only use these tokens.
  */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
-:root,
-[data-theme="dark"] {
-  --bg-base: #05070d;
-  --bg-elevated: #0b0f1a;
-  --bg-sunken: #070a12;
-  --bg-nav: #080a12eb;
-  --line: #5078ff40;
-  --line-muted: #5078ff1f;
-  --fg: #dbe4ff;
-  --fg-2: #9aa7d1;
-  --fg-3: #5c6a99;
-  --accent: #4f7cff;
-  --accent-strong: #3b82f6;
-  --accent-hover: #60a5fa;
-  --violet: #a78bfa;
-  --ok: #3fb950;
-  --warn: #e3b341;
-  --err: #f85149;
-  --term-user: #58a6ff;
-  --glow: #3b82f640;
-  --glow-strong: #60a5fa66;
-  --grid: #5078ff0d;
-  color-scheme: dark;
-}
-
-[data-theme="light"] {
-  --bg-base: #f4f6fd;
+:root {
+  --bg-base: #fafafa;
   --bg-elevated: #ffffff;
-  --bg-sunken: #eef1fb;
-  --bg-nav: #f8f9ffeb;
-  --line: #3b62e633;
-  --line-muted: #3b62e61a;
-  --fg: #0b1230;
-  --fg-2: #3d4a7a;
-  --fg-3: #6b78a8;
-  --accent: #3b62e6;
-  --accent-strong: #2f55d4;
-  --accent-hover: #2563eb;
-  --violet: #7c5ce0;
-  --ok: #1a7f37;
-  --warn: #9a6700;
-  --err: #cf222e;
-  --term-user: #0969da;
-  --glow: #3b62e61f;
-  --glow-strong: #3b62e640;
-  --grid: #3b62e60f;
+  --bg-sunken: #f4f4f5;
+  --line: #e4e4e7;
+  --line-muted: #f0f0f2;
+  --fg: #09090b;
+  --fg-2: #52525b;
+  --fg-3: #71717a;
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-soft: #eef2ff;
+  --violet: #7c3aed;
+  --ok: #16a34a;
+  --warn: #b45309;
+  --err: #dc2626;
   color-scheme: light;
 }
 
@@ -60,7 +27,6 @@
   --color-base: var(--bg-base);
   --color-elevated: var(--bg-elevated);
   --color-sunken: var(--bg-sunken);
-  --color-nav: var(--bg-nav);
   --color-line: var(--line);
   --color-line-muted: var(--line-muted);
   --color-fg: var(--fg);
@@ -68,63 +34,28 @@
   --color-fg-3: var(--fg-3);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
-  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
   --color-violet: var(--violet);
   --color-ok: var(--ok);
   --color-warn: var(--warn);
   --color-err: var(--err);
-  --color-term-user: var(--term-user);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --font-display: var(--font-special-elite), ui-serif, Georgia, serif;
 
-  --shadow-glow: 0 0 0 1px var(--line), 0 0 24px -4px var(--glow);
-  --shadow-glow-strong: 0 0 0 1px var(--accent), 0 0 28px -2px var(--glow-strong);
+  --shadow-card: 0 1px 2px rgb(9 9 11 / 0.04), 0 1px 3px rgb(9 9 11 / 0.04);
+  --shadow-pop: 0 12px 32px -8px rgb(9 9 11 / 0.14), 0 2px 6px rgb(9 9 11 / 0.05);
+  --shadow-focus: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 body {
   background-color: var(--bg-base);
-  background-image:
-    radial-gradient(ellipse 70% 45% at 50% -8%, var(--glow), transparent 70%),
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    32px 32px,
-    32px 32px;
-  background-attachment: fixed;
+  background-image: radial-gradient(ellipse 80% 40% at 50% -10%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%);
+  background-repeat: no-repeat;
   color: var(--fg);
   font-family: var(--font-sans);
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 35%, transparent);
-}
-
-/* Monospace eyebrow label, e.g. "./upload" or "01. destination". */
-@utility label-mono {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-}
-
-@keyframes caret {
-  50% {
-    opacity: 0;
-  }
-}
-
-@utility caret {
-  display: inline-block;
-  width: 0.55em;
-  height: 1.05em;
-  vertical-align: -0.15em;
-  background: var(--fg);
-  animation: caret 1.1s steps(1) infinite;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
 }

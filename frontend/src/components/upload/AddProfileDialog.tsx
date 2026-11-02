@@ -76,7 +76,7 @@ export function AddProfileDialog({
             placeholder="https://api.example.com/upload/v1"
             required
           />
-          <Description className="mt-1 text-xs text-fg-3">HTTPS only (HTTP allowed for localhost).</Description>
+          <Description className="mt-1.5 text-xs text-fg-3">HTTPS only (HTTP allowed for localhost).</Description>
         </Field>
         <Field>
           <Label className={fieldLabelClass}>Allowed storage hosts</Label>
@@ -86,17 +86,17 @@ export function AddProfileDialog({
             onChange={(e) => setHosts(e.target.value)}
             placeholder="*.r2.cloudflarestorage.com, my-bucket.s3.amazonaws.com"
           />
-          <Description className="mt-1 text-xs text-fg-3">
+          <Description className="mt-1.5 text-xs text-fg-3">
             Presigned URLs pointing anywhere else are refused. Defaults to the API host.
           </Description>
         </Field>
         {error && (
-          <p role="alert" className="font-mono text-xs text-err">
+          <p role="alert" className="rounded-lg bg-err/8 px-3 py-2 text-sm text-err">
             {error}
           </p>
         )}
         <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" variant="primary">
