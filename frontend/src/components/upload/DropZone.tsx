@@ -1,6 +1,6 @@
 "use client";
 
-import { CloudUpload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useId, useRef, useState, type DragEvent } from "react";
 import { cx } from "@/components/ui/primitives";
 
@@ -46,26 +46,15 @@ export function DropZone({
       }}
       onDrop={onDrop}
       className={cx(
-        "group relative flex cursor-pointer flex-col items-center justify-center gap-2.5 overflow-hidden rounded-lg border border-dashed px-6 py-10 text-center transition",
-        "bg-sunken/60 bg-[linear-gradient(var(--grid)_1px,transparent_1px),linear-gradient(90deg,var(--grid)_1px,transparent_1px)] bg-size-[16px_16px]",
+        "group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed px-6 py-9 text-center transition-colors",
         "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent",
-        over ? "border-accent shadow-glow-strong" : "border-line hover:border-accent/70 hover:shadow-glow",
+        over ? "border-accent bg-sunken" : "border-line-strong hover:border-fg-3 hover:bg-sunken",
         disabled && "cursor-not-allowed opacity-60",
       )}
     >
-      <span
-        className={cx(
-          "grid size-12 place-items-center rounded-md border transition",
-          over ? "border-accent bg-accent/15 text-accent-hover" : "border-line-muted bg-elevated text-fg-3 group-hover:text-accent",
-        )}
-      >
-        <CloudUpload aria-hidden className="size-6" />
-      </span>
-      <span className="font-mono text-sm text-fg">
-        <span className="text-accent">$</span> drop files here <span className="text-fg-3">or</span>{" "}
-        <span className="text-accent-hover underline decoration-accent/40 underline-offset-4 group-hover:decoration-accent">
-          browse
-        </span>
+      <Upload aria-hidden className={cx("size-5 transition-colors", over ? "text-accent" : "text-fg-3 group-hover:text-fg")} />
+      <span className="text-sm text-fg">
+        Drop files here or <span className="font-medium underline underline-offset-4">browse</span>
       </span>
       {hint && <span className="text-xs text-fg-3">{hint}</span>}
       <input

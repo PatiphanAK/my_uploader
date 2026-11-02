@@ -6,7 +6,7 @@ import { useState } from "react";
 import { cx, fieldLabelClass, inputClass } from "@/components/ui/primitives";
 
 const iconButton =
-  "rounded p-1.5 text-fg-3 transition-colors hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-accent";
+  "rounded p-1.5 text-fg-3 transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent";
 
 export function UploadKeyInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [visible, setVisible] = useState(false);
@@ -14,7 +14,7 @@ export function UploadKeyInput({ value, onChange }: { value: string; onChange: (
     <Field>
       <Label className={fieldLabelClass}>Upload key</Label>
       <div className="relative">
-        <KeyRound aria-hidden className="pointer-events-none absolute top-2.5 left-3 size-4 text-accent/70" />
+        <KeyRound aria-hidden className="pointer-events-none absolute top-2.5 left-3 size-4 text-fg-3" />
         <Input
           type={visible ? "text" : "password"}
           value={value}
@@ -24,8 +24,8 @@ export function UploadKeyInput({ value, onChange }: { value: string; onChange: (
           // Not a login password; keep password managers from saving it.
           data-1p-ignore
           data-lpignore="true"
-          placeholder="paste the key issued by your backend"
-          className={cx(inputClass, "pr-16 pl-9 font-mono placeholder:font-mono placeholder:text-xs")}
+          placeholder="Paste the key from your backend"
+          className={cx(inputClass, "pr-16 pl-9 font-mono placeholder:font-sans")}
         />
         <div className="absolute inset-y-0 right-1 flex items-center">
           {value && (
@@ -44,8 +44,8 @@ export function UploadKeyInput({ value, onChange }: { value: string; onChange: (
           </button>
         </div>
       </div>
-      <Description className="mt-1.5 font-mono text-[11px] text-fg-3">
-        <span className="text-ok">●</span> memory only · never saved · never in a URL · never sent to storage
+      <Description className="mt-2 text-xs text-fg-3">
+        Kept in memory only. Never saved, never put in a URL, never sent to storage.
       </Description>
     </Field>
   );

@@ -91,7 +91,7 @@ export function AddProfileDialog({
           </Description>
         </Field>
         {error && (
-          <p role="alert" className="font-mono text-xs text-err">
+          <p role="alert" className="text-sm text-err">
             {error}
           </p>
         )}

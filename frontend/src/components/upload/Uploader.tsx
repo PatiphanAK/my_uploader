@@ -1,10 +1,9 @@
 "use client";
 
-import { Plus, ShieldCheck, ShieldAlert, Trash, Upload } from "lucide-react";
+import { Plus, ShieldCheck, ShieldAlert, Upload } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Select } from "@/components/ui/Select";
-import { SiteHeader } from "@/components/ui/SiteHeader";
-import { Badge, Button, cx, Panel } from "@/components/ui/primitives";
+import { Button, Panel } from "@/components/ui/primitives";
 import { useProfiles } from "@/hooks/useProfiles";
 import { useUploadQueue } from "@/hooks/useUploadQueue";
 import type { BackendProfile } from "@/lib/config/profiles";
@@ -90,53 +89,38 @@ export function Uploader() {
   const hintText = [
     hints?.maxFileSize ? `Up to ${formatBytes(hints.maxFileSize)}` : null,
     hints?.allowedExtensions?.length ? hints.allowedExtensions.join(" ") : null,
-    "Limits are enforced by the backend for your key",
+    "Limits are enforced by your backend",
   ]
     .filter(Boolean)
     .join(" · ");
 
   return (
     <>
-      <SiteHeader />
-      <div id="top" className="mx-auto w-full max-w-4xl space-y-5 px-4 pb-16">
-        <section className="grid gap-8 pt-10 pb-4 sm:pt-14 md:grid-cols-[1fr_17rem] md:items-end">
-          <div>
-            <p className="label-mono">./upload</p>
-            <h1 className="mt-4 font-mono text-3xl leading-[1.15] font-bold tracking-tight text-fg sm:text-[2.5rem]">
-              Drop files,
-              <br />
-              straight to <span className="text-accent">storage.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-fg-2">
-              Presigned uploads for TatarBot and other projects. Your key stays in memory; bytes go directly to
-              object storage, and your backend reports processing status.
-            </p>
-          </div>
-          <div className="border-line-muted text-sm md:border-l md:pl-5">
-            <p className="label-mono mb-3">session</p>
-            <dl className="space-y-2">
-            <StatusRow label="profile" value={profile?.name ?? "—"} />
-            <StatusRow label="key" value={uploadKey ? "set · in memory" : "not set"} tone={uploadKey ? "ok" : "warn"} />
-            <StatusRow label="parts" value={`${settings.partSizeMiB} MiB × ${settings.concurrency}`} />
-            <StatusRow label="queue" value={`${queue.items.length} file${queue.items.length === 1 ? "" : "s"}`} />
-            </dl>
-          </div>
-        </section>
+      <div className="mx-auto w-full max-w-3xl space-y-6 px-4 py-10 sm:py-14">
+        <header>
+          <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight text-fg">
+            <Upload aria-hidden className="size-5" />
+            Tatar Upload
+          </h1>
+          <p className="mt-1.5 max-w-xl text-sm text-fg-2">
+            Upload files straight to object storage with a key from your backend. The key stays in this tab; your
+            backend reports processing status.
+          </p>
+        </header>
 
         <Panel
           id="destination"
-          index="01"
-          title="destination"
+          title="Destination"
           actions={
             <Button size="sm" variant="ghost" icon={Plus} onClick={() => setAddOpen(true)}>
               Add backend
             </Button>
           }
         >
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <Select
-                label="Backend profile"
+                label="Backend"
                 value={profile?.id}
                 onChange={(id) => {
                   if (id !== profile?.id) setUploadKey("");
@@ -150,33 +134,38 @@ export function Uploader() {
                 }))}
               />
               {profile && (
-                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-xs text-fg-3">
                   {profile.trusted ? (
-                    <Badge tone="success">
-                      <ShieldCheck aria-hidden className="size-3" /> {profile.source === "env" ? "configured" : "built-in"}
-                    </Badge>
+                    <span className="inline-flex items-center gap-1">
+                      <ShieldCheck aria-hidden className="size-3.5 text-ok" />
+                      {profile.source === "env" ? "Configured" : "Built-in"}
+                    </span>
                   ) : (
-                    <Badge tone="warning">
-                      <ShieldAlert aria-hidden className="size-3" /> custom · confirm before use
-                    </Badge>
+                    <span className="inline-flex items-center gap-1 text-warn">
+                      <ShieldAlert aria-hidden className="size-3.5" /> Custom, asks before sending your key
+                    </span>
                   )}
-                  <Badge>{profile.adapter}</Badge>
+                  <span aria-hidden>·</span>
+                  <span>{profile.adapter} adapter</span>
                   {profile.source === "custom" && (
-                    <button
-                      type="button"
-                      onClick={() => removeProfile(profile.id)}
-                      className="inline-flex items-center gap-1 rounded px-1 font-mono text-[11px] text-err/90 hover:text-err hover:underline focus-visible:outline-2 focus-visible:outline-accent"
-                    >
-                      <Trash aria-hidden className="size-3" /> remove
-                    </button>
+                    <>
+                      <span aria-hidden>·</span>
+                      <button
+                        type="button"
+                        onClick={() => removeProfile(profile.id)}
+                        className="text-err hover:underline focus-visible:outline-2 focus-visible:outline-accent"
+                      >
+                        Remove
+                      </button>
+                    </>
                   )}
-                </div>
+                </p>
               )}
-              {profile?.description && <p className="mt-2 text-xs leading-relaxed text-fg-3">{profile.description}</p>}
+              {profile?.description && <p className="mt-1.5 text-xs text-fg-3">{profile.description}</p>}
             </div>
             <UploadKeyInput value={uploadKey} onChange={setUploadKey} />
           </div>
-          <div className="mt-4 border-t border-line-muted pt-3">
+          <div className="mt-5 border-t border-line pt-4">
             <TransferSettings
               value={settings}
               onChange={(s) => {
@@ -187,15 +176,16 @@ export function Uploader() {
           </div>
         </Panel>
 
-        <Panel id="files" index="02" title="files">
+        <Panel
+          id="files"
+          title="Files"
+          description={queue.items.length ? `${queue.items.length} file${queue.items.length === 1 ? "" : "s"} · ${ready.length} ready` : undefined}
+        >
           <DropZone onFiles={queue.addFiles} accept={acceptAttribute(hints)} hint={hintText} />
 
           {queue.items.length > 0 && (
             <>
-              <p className="mt-5 mb-2 font-mono text-[11px] text-fg-3">
-                {queue.items.length} file{queue.items.length === 1 ? "" : "s"} queued
-              </p>
-              <ul className="space-y-3">
+              <ul className="mt-4 divide-y divide-line border-y border-line">
                 {queue.items.map((item) => (
                   <UploadItem
                     key={item.id}
@@ -209,17 +199,13 @@ export function Uploader() {
                   />
                 ))}
               </ul>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line-muted pt-4">
-                <p className="font-mono text-[11px] text-fg-3">
-                  {!uploadKey ? (
-                    <span className="text-warn">› enter an upload key to start</span>
-                  ) : (
-                    `› ${ready.length} ready`
-                  )}
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-fg-3">
+                  {!uploadKey ? <span className="text-warn">Enter an upload key to start.</span> : null}
                 </p>
                 <div className="flex gap-2">
                   {finished.length > 0 && (
-                    <Button size="sm" variant="ghost" onClick={queue.clearFinished}>
+                    <Button variant="ghost" onClick={queue.clearFinished}>
                       Clear finished
                     </Button>
                   )}
@@ -237,9 +223,8 @@ export function Uploader() {
           )}
         </Panel>
 
-        <footer className="pt-4 text-center font-mono text-[11px] text-fg-3">
-          frontend only <span className="text-accent/60">·</span> bytes go directly to storage via presigned URLs{" "}
-          <span className="text-accent/60">·</span> processing status is reported by your backend
+        <footer className="text-xs text-fg-3">
+          Runs entirely in your browser. Files go directly to storage through presigned URLs.
         </footer>
       </div>
 
@@ -255,21 +240,5 @@ export function Uploader() {
         onCancel={() => pendingTrust?.resolve(false)}
       />
     </>
-  );
-}
-
-function StatusRow({ label, value, tone }: { label: string; value: string; tone?: "ok" | "warn" }) {
-  return (
-    <div className="grid grid-cols-[4.5rem_1fr] items-baseline gap-3">
-      <dt className="text-right font-mono text-xs text-fg">{label}</dt>
-      <dd
-        className={cx(
-          "truncate border-l border-line-muted pl-3 text-[13px]",
-          tone === "ok" ? "text-ok" : tone === "warn" ? "text-warn" : "text-fg-2",
-        )}
-      >
-        {value}
-      </dd>
-    </div>
   );
 }

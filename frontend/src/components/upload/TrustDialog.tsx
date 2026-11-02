@@ -22,20 +22,20 @@ export function TrustDialog({
       onClose={onCancel}
       title={
         <span className="flex items-center gap-2">
-          <ShieldAlert aria-hidden className="size-5 text-warn" />
+          <ShieldAlert aria-hidden className="size-4 text-warn" />
           Send upload key to this backend?
         </span>
       }
       description="This profile was added in the browser, not configured at build time. Only continue if you trust it."
     >
-      <dl className="space-y-3 rounded-md border border-line-muted bg-sunken p-3 text-sm">
+      <dl className="space-y-3 rounded-md border border-line bg-sunken p-3 text-sm">
         <div>
-          <dt className="label-mono text-[10px]">API origin (receives your key)</dt>
-          <dd className="mt-1 font-mono text-[13px] break-all text-accent-hover">{origin}</dd>
+          <dt className="text-xs text-fg-3">API origin (receives your key)</dt>
+          <dd className="mt-1 font-mono text-[13px] break-all text-fg">{origin}</dd>
         </div>
         <div>
-          <dt className="label-mono text-[10px]">Allowed storage hosts (receive file bytes, never the key)</dt>
-          <dd className="mt-1 font-mono text-[13px] break-all text-accent-hover">
+          <dt className="text-xs text-fg-3">Allowed storage hosts (receive file bytes, never the key)</dt>
+          <dd className="mt-1 font-mono text-[13px] break-all text-fg">
             {profile?.allowedUploadHosts?.join(", ")}
           </dd>
         </div>
