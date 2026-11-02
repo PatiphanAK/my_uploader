@@ -10,11 +10,13 @@ export function cx(...parts: Array<string | false | null | undefined>) {
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 
+// Portfolio-style controls: outlined, monospace, uppercase, with a soft glow.
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-accent text-white shadow-card data-hover:bg-accent-strong",
-  secondary: "border border-line bg-elevated text-fg shadow-card data-hover:bg-sunken",
-  ghost: "text-fg-2 data-hover:bg-sunken data-hover:text-fg",
-  danger: "text-err data-hover:bg-err/8",
+  primary:
+    "border border-accent bg-accent/10 text-accent-hover data-hover:bg-accent/20 data-hover:shadow-glow-strong",
+  secondary: "border border-line text-fg-2 data-hover:border-accent data-hover:text-accent-hover",
+  ghost: "border border-transparent text-fg-3 data-hover:border-line-muted data-hover:text-fg",
+  danger: "border border-transparent text-err/90 data-hover:border-err/40 data-hover:bg-err/10 data-hover:text-err",
 };
 
 export interface ButtonProps extends Omit<HButtonProps, "className" | "children"> {
@@ -30,10 +32,10 @@ export function Button({ variant = "secondary", size = "md", icon: Icon, classNa
     <HButton
       {...rest}
       className={cx(
-        "inline-flex items-center justify-center gap-1.5 rounded-lg font-medium whitespace-nowrap transition",
+        "inline-flex items-center justify-center gap-1.5 rounded font-mono font-semibold tracking-[0.12em] uppercase transition",
         "focus:outline-none data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-accent",
-        "data-disabled:cursor-not-allowed data-disabled:opacity-45 data-disabled:shadow-none",
-        size === "sm" ? "h-8 px-2.5 text-[13px]" : "h-10 px-4 text-sm",
+        "data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:shadow-none",
+        size === "sm" ? "h-7 px-2.5 text-[10px]" : "h-9 px-3.5 text-[11px]",
         VARIANTS[variant],
         className,
       )}
@@ -44,12 +46,11 @@ export function Button({ variant = "secondary", size = "md", icon: Icon, classNa
   );
 }
 
-/** White card with an optional numbered step heading. */
+/** Card with a numbered monospace heading, like the portfolio's "01. about" nav items. */
 export function Panel({
   id,
   index,
   title,
-  description,
   actions,
   children,
   className,
@@ -57,7 +58,6 @@ export function Panel({
   id?: string;
   index?: string;
   title?: ReactNode;
-  description?: ReactNode;
   actions?: ReactNode;
   children: ReactNode;
   className?: string;
@@ -65,22 +65,20 @@ export function Panel({
   return (
     <section
       id={id}
-      className={cx("scroll-mt-20 rounded-2xl border border-line bg-elevated p-5 shadow-card sm:p-6", className)}
+      className={cx(
+        "scroll-mt-20 rounded-lg border border-line-muted bg-elevated/80 p-4 backdrop-blur-sm sm:p-5",
+        className,
+      )}
     >
       {(title || actions) && (
-        <div className="mb-5 flex items-start justify-between gap-3">
-          <div className="flex items-start gap-3">
-            {index && (
-              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-accent-soft text-xs font-semibold text-accent">
-                {index}
-              </span>
-            )}
-            <div>
-              {title && <h2 className="text-base font-semibold text-fg">{title}</h2>}
-              {description && <p className="mt-0.5 text-sm text-fg-3">{description}</p>}
-            </div>
-          </div>
-          {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+        <div className="mb-4 flex items-center justify-between gap-3">
+          {title && (
+            <h2 className="label-mono">
+              {index && <span className="mr-1.5 text-accent/70 italic">{index}.</span>}
+              <span className="font-semibold text-fg-2">{title}</span>
+            </h2>
+          )}
+          {actions && <div className="flex items-center gap-2">{actions}</div>}
         </div>
       )}
       {children}
@@ -91,19 +89,19 @@ export function Panel({
 export type Tone = "neutral" | "info" | "success" | "warning" | "danger";
 
 const TONES: Record<Tone, string> = {
-  neutral: "bg-sunken text-fg-2",
-  info: "bg-accent-soft text-accent",
-  success: "bg-ok/10 text-ok",
-  warning: "bg-warn/10 text-warn",
-  danger: "bg-err/10 text-err",
+  neutral: "border-line text-fg-2",
+  info: "border-accent/50 bg-accent/10 text-accent-hover",
+  success: "border-ok/40 bg-ok/10 text-ok",
+  warning: "border-warn/40 bg-warn/10 text-warn",
+  danger: "border-err/40 bg-err/10 text-err",
 };
 
-/** Small pill label. */
+/** Small monospace tag, like the portfolio's tech/status chips. */
 export function Badge({ tone = "neutral", children, className }: { tone?: Tone; children: ReactNode; className?: string }) {
   return (
     <span
       className={cx(
-        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs leading-5 font-medium",
+        "inline-flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-[11px] leading-none",
         TONES[tone],
         className,
       )}
@@ -115,8 +113,8 @@ export function Badge({ tone = "neutral", children, className }: { tone?: Tone; 
 
 const BAR: Record<Tone, string> = {
   neutral: "bg-fg-3",
-  info: "bg-linear-to-r from-accent to-violet",
-  success: "bg-ok",
+  info: "bg-linear-to-r from-accent-strong via-accent to-violet shadow-[0_0_12px_var(--glow-strong)]",
+  success: "bg-ok shadow-[0_0_10px_color-mix(in_srgb,var(--ok)_45%,transparent)]",
   warning: "bg-warn",
   danger: "bg-err",
 };
@@ -142,7 +140,7 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.floor(pct)}
-      className={cx("w-full overflow-hidden rounded-full bg-sunken", size === "sm" ? "h-1" : "h-2")}
+      className={cx("w-full overflow-hidden rounded-full bg-line-muted", size === "sm" ? "h-1" : "h-1.5")}
     >
       <div
         className={cx("h-full rounded-full transition-[width] duration-200 ease-out motion-reduce:transition-none", BAR[tone])}
@@ -153,7 +151,7 @@ export function ProgressBar({
 }
 
 export const inputClass =
-  "block h-10 w-full rounded-lg border border-line bg-elevated px-3 text-sm text-fg shadow-card placeholder:text-fg-3 transition " +
-  "focus:outline-none data-focus:border-accent data-focus:shadow-focus data-hover:border-zinc-300";
+  "block h-9 w-full rounded-md border border-line-muted bg-sunken px-3 text-sm text-fg placeholder:text-fg-3 transition " +
+  "focus:outline-none data-focus:border-accent data-focus:shadow-glow data-hover:border-line";
 
-export const fieldLabelClass = "mb-1.5 block text-sm font-medium text-fg";
+export const fieldLabelClass = "label-mono mb-1.5 block text-[10px]";

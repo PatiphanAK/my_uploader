@@ -9,7 +9,7 @@ backend, drop files, and bytes go straight to object storage via presigned URLs.
 - `File.slice()` streaming, configurable part size and concurrency, exponential backoff with jitter,
   pause/resume, cancel, retry, resume after reload, per-part CRC32/CRC32C/SHA-1/SHA-256 checksums.
 - Byte-accurate progress, speed and ETA; backend-reported processing status.
-- Tailwind CSS + Headless UI; responsive; clean white theme. Colors live as tokens in `src/app/globals.css`.
+- Tailwind CSS + Headless UI; responsive; themed after the PatiphanAK portfolio (dark by default, light toggle in the header). Theme tokens live in `src/app/globals.css`.
 
 ## Quick start
 

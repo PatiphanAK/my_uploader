@@ -1,7 +1,7 @@
 "use client";
 
 import { Field, Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import type { ReactNode } from "react";
 import { cx, fieldLabelClass } from "./primitives";
 
@@ -34,18 +34,18 @@ export function Select<T>({
       <Listbox value={value} onChange={onChange}>
         <ListboxButton
           className={cx(
-            "relative flex h-10 w-full items-center rounded-lg border border-line bg-elevated pr-9 pl-3 text-left text-sm text-fg shadow-card transition",
-            "focus:outline-none data-focus:border-accent data-focus:shadow-focus data-hover:border-zinc-300 data-open:border-accent data-open:shadow-focus data-disabled:opacity-50",
+            "relative flex h-9 w-full items-center rounded-md border border-line-muted bg-sunken pr-8 pl-3 text-left text-sm text-fg transition",
+            "focus:outline-none data-focus:border-accent data-focus:shadow-glow data-hover:border-line data-open:border-accent data-disabled:opacity-50",
           )}
         >
           <span className="truncate">{selected?.label}</span>
-          <ChevronsUpDown aria-hidden className="pointer-events-none absolute right-3 size-4 text-fg-3" />
+          <ChevronsUpDown aria-hidden className="pointer-events-none absolute right-2.5 size-4 text-fg-3" />
         </ListboxButton>
         <ListboxOptions
           anchor="bottom start"
           transition
           className={cx(
-            "z-30 w-(--button-width) min-w-56 rounded-xl border border-line bg-elevated p-1 shadow-pop [--anchor-gap:6px]",
+            "z-30 w-(--button-width) min-w-56 rounded-md border border-line bg-elevated p-1 shadow-glow [--anchor-gap:4px]",
             "focus:outline-none",
             "transition duration-100 ease-out data-closed:-translate-y-1 data-closed:opacity-0",
           )}
@@ -54,13 +54,15 @@ export function Select<T>({
             <ListboxOption
               key={o.key}
               value={o.value}
-              className="group flex cursor-default items-start gap-2 rounded-lg px-2.5 py-2 text-sm text-fg select-none data-focus:bg-sunken"
+              className="group flex cursor-default items-start gap-2 rounded px-2 py-1.5 text-sm text-fg-2 select-none data-focus:bg-accent/10 data-focus:text-fg data-selected:text-fg"
             >
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium">{o.label}</span>
-                {o.description && <span className="block truncate text-xs text-fg-3">{o.description}</span>}
+              <span aria-hidden className="mt-0.5 w-3 shrink-0 font-mono text-xs text-accent opacity-0 group-data-selected:opacity-100">
+                ›
               </span>
-              <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-accent opacity-0 group-data-selected:opacity-100" />
+              <span className="min-w-0">
+                <span className="block truncate">{o.label}</span>
+                {o.description && <span className="block truncate font-mono text-[11px] text-fg-3">{o.description}</span>}
+              </span>
             </ListboxOption>
           ))}
         </ListboxOptions>

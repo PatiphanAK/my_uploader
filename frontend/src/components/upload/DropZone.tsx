@@ -46,23 +46,26 @@ export function DropZone({
       }}
       onDrop={onDrop}
       className={cx(
-        "group flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-12 text-center transition",
+        "group relative flex cursor-pointer flex-col items-center justify-center gap-2.5 overflow-hidden rounded-lg border border-dashed px-6 py-10 text-center transition",
+        "bg-sunken/60 bg-[linear-gradient(var(--grid)_1px,transparent_1px),linear-gradient(90deg,var(--grid)_1px,transparent_1px)] bg-size-[16px_16px]",
         "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent",
-        over ? "border-accent bg-accent-soft" : "border-line bg-base hover:border-accent/50 hover:bg-accent-soft/50",
+        over ? "border-accent shadow-glow-strong" : "border-line hover:border-accent/70 hover:shadow-glow",
         disabled && "cursor-not-allowed opacity-60",
       )}
     >
       <span
         className={cx(
-          "grid size-12 place-items-center rounded-full transition",
-          over ? "bg-accent text-white" : "bg-elevated text-accent shadow-card ring-1 ring-line group-hover:ring-accent/30",
+          "grid size-12 place-items-center rounded-md border transition",
+          over ? "border-accent bg-accent/15 text-accent-hover" : "border-line-muted bg-elevated text-fg-3 group-hover:text-accent",
         )}
       >
         <CloudUpload aria-hidden className="size-6" />
       </span>
-      <span className="text-sm text-fg-2">
-        <span className="font-semibold text-accent group-hover:underline group-hover:underline-offset-4">Click to browse</span>{" "}
-        or drag and drop files here
+      <span className="font-mono text-sm text-fg">
+        <span className="text-accent">$</span> drop files here <span className="text-fg-3">or</span>{" "}
+        <span className="text-accent-hover underline decoration-accent/40 underline-offset-4 group-hover:decoration-accent">
+          browse
+        </span>
       </span>
       {hint && <span className="text-xs text-fg-3">{hint}</span>}
       <input

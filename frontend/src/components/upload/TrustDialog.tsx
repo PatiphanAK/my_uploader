@@ -28,20 +28,20 @@ export function TrustDialog({
       }
       description="This profile was added in the browser, not configured at build time. Only continue if you trust it."
     >
-      <dl className="space-y-3 rounded-xl border border-line bg-base p-4 text-sm">
+      <dl className="space-y-3 rounded-md border border-line-muted bg-sunken p-3 text-sm">
         <div>
-          <dt className="text-xs font-medium text-fg-3">API origin (receives your key)</dt>
-          <dd className="mt-1 font-mono text-[13px] break-all text-fg">{origin}</dd>
+          <dt className="label-mono text-[10px]">API origin (receives your key)</dt>
+          <dd className="mt-1 font-mono text-[13px] break-all text-accent-hover">{origin}</dd>
         </div>
         <div>
-          <dt className="text-xs font-medium text-fg-3">Allowed storage hosts (receive file bytes, never the key)</dt>
-          <dd className="mt-1 font-mono text-[13px] break-all text-fg">
+          <dt className="label-mono text-[10px]">Allowed storage hosts (receive file bytes, never the key)</dt>
+          <dd className="mt-1 font-mono text-[13px] break-all text-accent-hover">
             {profile?.allowedUploadHosts?.join(", ")}
           </dd>
         </div>
       </dl>
       <div className="mt-4 flex justify-end gap-2">
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
         <Button variant="primary" onClick={onConfirm} autoFocus>
